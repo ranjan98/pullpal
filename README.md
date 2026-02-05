@@ -21,7 +21,7 @@ Meanwhile, deployments are delayed, features are blocked, and you're context-swi
 ## Quick Start
 
 ```bash
-git clone https://github.com/yourusername/pullpal.git
+git clone https://github.com/ranjan98/pullpal.git
 cd pullpal
 npm install
 cp .env.example .env
