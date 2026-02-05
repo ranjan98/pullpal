@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // Health check endpoint
-app.get('/', (req: Request, res: Response) => {
+app.get('/', (_req: Request, res: Response) => {
   res.json({
     service: 'PullPal',
     status: 'running',
@@ -37,13 +37,14 @@ app.post('/webhooks/github', async (req: Request, res: Response) => {
 });
 
 // Metrics endpoint
-app.get('/metrics', async (req: Request, res: Response) => {
+app.get('/metrics', async (_req: Request, res: Response): Promise<void> => {
   try {
     const owner = process.env.GITHUB_OWNER;
     const repo = process.env.GITHUB_REPO;
 
     if (!owner || !repo) {
-      return res.status(400).json({ error: 'GITHUB_OWNER and GITHUB_REPO must be configured' });
+      res.status(400).json({ error: 'GITHUB_OWNER and GITHUB_REPO must be configured' });
+      return;
     }
 
     const metrics = await getPRMetrics(owner, repo);
@@ -55,7 +56,7 @@ app.get('/metrics', async (req: Request, res: Response) => {
 });
 
 // Manual trigger for stale PR checks
-app.post('/check-stale-prs', async (req: Request, res: Response) => {
+app.post('/check-stale-prs', async (_req: Request, res: Response) => {
   try {
     const { checkStalePRs } = await import('./scheduler');
     await checkStalePRs();

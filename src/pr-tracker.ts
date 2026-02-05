@@ -156,7 +156,7 @@ export async function syncWithGitHub(owner: string, repo: string): Promise<void>
         createdAt: new Date(pr.created_at),
         owner,
         repo,
-        isDraft: pr.draft,
+        isDraft: pr.draft ?? false,
         lastReviewedAt: lastReview ? new Date(lastReview.submitted_at!) : undefined,
         lastUpdated: new Date(pr.updated_at),
         reviewCount: reviews.length,
