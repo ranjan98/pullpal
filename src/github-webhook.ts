@@ -13,6 +13,7 @@ interface WebhookPayload {
     };
     created_at: string;
     state: string;
+    merged?: boolean;
     draft: boolean;
   };
   review?: {
@@ -119,13 +120,10 @@ async function handlePullRequestEvent(payload: WebhookPayload): Promise<void> {
       break;
 
     case 'closed':
-      if (pull_request.state === 'closed') {
-        await removePR(pull_request.number);
-        // Only notify if merged
-        const wasMerged = payload.pull_request?.state === 'closed';
-        if (wasMerged) {
-          await notifyPRMerged(prData);
-        }
+      await removePR(pull_request.number);
+      // Only notify if merged (not just closed)
+      if (pull_request.merged) {
+        await notifyPRMerged(prData);
       }
       break;
 
